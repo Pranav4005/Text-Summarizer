@@ -10,3 +10,6 @@
 6. Update the pipeline
 7. Update main.py
 8. Update app.py
+
+## Deployment Link
+https://text-summarizer-qr77.onrender.com
