@@ -1,0 +1,20 @@
+from textSummarizer.config.configuration import ConfigurationManager
+from textSummarizer.components.data_ingestion import DataIngestion
+from textSummarizer.logging import logger
+
+
+class DataIngestionTrainingPipeline:
+    def __init__(self):
+        self.config = ConfigurationManager()
+    def main(self):
+        try:
+            data_ingestion_config = self.config.get_data_ingestion_config()
+            logger.info(f"Data Ingestion config: {data_ingestion_config}")
+
+            data_ingestion = DataIngestion(config=data_ingestion_config)
+
+            data_ingestion.download_file()
+            data_ingestion.extract_zip_file()
+
+        except Exception as e:
+            raise e

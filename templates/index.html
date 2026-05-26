@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Text Summarizer</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <nav>
+        <div class="logo">✨ Summarizer</div>
+    </nav>
+
+    <main class="container">
+        <header>
+            <h1>Text Summarizer</h1>
+            <p>Paste your long articles below and get a concise summary in seconds.</p>
+        </header>
+
+        <div class="editor-grid">
+            <div class="input-area">
+                <label for="source-text">Source Text</label>
+                <textarea id="source-text" placeholder="Paste your long text here..."></textarea>
+                <div class="controls">
+                    <button id="summarize-btn" class="btn-primary">Summarize Now</button>
+                    <button id="clear-btn" class="btn-secondary">Clear</button>
+                </div>
+            </div>
+
+            <div class="output-area">
+                <label for="summary-text">Summary Output</label>
+                <div id="summary-result" class="result-box">
+                    <p id="placeholder-text">Your summary will appear here...</p>
+                    <p id="actual-summary" style="display: none;"></p>
+                </div>
+                <button id="copy-btn" class="btn-copy">Copy to Clipboard</button>
+            </div>
+        </div>
+
+        <div id="loader" class="loader" style="display: none;"></div>
+    </main>
+
+    <script>
+        const summarizeBtn = document.getElementById('summarize-btn');
+        const sourceText = document.getElementById('source-text');
+        const placeholder = document.getElementById('placeholder-text');
+        const summaryDisplay = document.getElementById('actual-summary');
+        const loader = document.getElementById('loader');
+        const clearBtn = document.getElementById('clear-btn');
+        clearBtn.onclick = () => {
+            sourceText.value = "";
+            summaryDisplay.innerText = "";
+            summaryDisplay.style.display = "none";
+            placeholder.style.display = "block";
+        };
+        const copyBtn = document.getElementById('copy-btn');
+        copyBtn.onclick = () => {
+            if (summaryDisplay.innerText.trim()) {
+                navigator.clipboard.writeText(summaryDisplay.innerText)
+                    .then(() => alert("Summary copied to clipboard!"))
+                    .catch(err => alert("Failed to copy: " + err));
+            } else {
+                alert("No summary to copy!");
+            }
+        };
+        summarizeBtn.onclick = async () => {
+            const text = sourceText.value.trim();
+            if (!text) {
+                alert("Please enter some text!");
+                return;
+            }
+
+            loader.style.display = 'block';
+            placeholder.style.display = 'none';
+            summaryDisplay.style.display = 'none';
+
+            // Integrating with Flask API
+            const response = await fetch('/predict', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: `text=${encodeURIComponent(text)}`
+            });
+
+            const data = await response.json();
+            loader.style.display = 'none';
+
+            if (data.summary) {
+                summaryDisplay.innerText = data.summary;
+                summaryDisplay.style.display = 'block';
+            }
+        };
+    </script>
+</body>
+</html>
