@@ -8,6 +8,7 @@ nltk
 tqdm
 pyYAML
 matplotlib
+--extra-index-url https://download.pytorch.org/whl/cpu
 torch
 notebook
 boto3

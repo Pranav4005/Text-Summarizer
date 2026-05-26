@@ -6,6 +6,7 @@ from fastapi import Request
 import uvicorn
 import os
 
+from textSummarizer import pipeline
 from textSummarizer.pipeline.prediction_pipeline import PredictionPipeline
 
 
@@ -26,15 +27,6 @@ templates = Jinja2Templates(directory="templates")
 
 
 # ====================================
-# Load model once
-# ====================================
-
-print("Loading model...")
-
-prediction_pipeline = PredictionPipeline()
-
-print("Model loaded successfully")
-
 
 # ====================================
 # Home Page
@@ -57,6 +49,10 @@ async def home(request: Request):
 async def predict(text: str = Form(...)):
 
     try:
+
+        print("Loading model...")
+
+        prediction_pipeline = PredictionPipeline()
 
         print("Generating summary...")
 
