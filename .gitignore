@@ -216,3 +216,8 @@ artifacts/
 data/
 *.pt
 *.bin
+
+artifacts/model/
+*.safetensors
+*.bin
+

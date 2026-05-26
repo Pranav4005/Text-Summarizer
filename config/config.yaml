@@ -26,6 +26,6 @@ model_trainer:
 model_evaluation:
   root_dir: artifacts/model_evaluation
   data_path: artifacts/data_transformation/samsum_dataset
-  model_path: artifacts/model
-  tokenizer_path: artifacts/model
+  model_path: Pranav4005/text-summarizer-t5
+  tokenizer_path: Pranav4005/text-summarizer-t5
   metric_file_name: artifacts/model_evaluation/metrics.csv
