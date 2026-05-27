@@ -1,12 +1,10 @@
-from fastapi import FastAPI, Form
+from fastapi import FastAPI, Form, Request
 from fastapi.responses import JSONResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
-from fastapi import Request
 import uvicorn
 import os
 
-from textSummarizer import pipeline
 from textSummarizer.pipeline.prediction_pipeline import PredictionPipeline
 
 
@@ -27,6 +25,15 @@ templates = Jinja2Templates(directory="templates")
 
 
 # ====================================
+# Load Model Globally (ONLY ONCE)
+# ====================================
+
+print("Loading model globally...")
+
+prediction_pipeline = PredictionPipeline()
+
+print("Model loaded successfully")
+
 
 # ====================================
 # Home Page
@@ -50,10 +57,6 @@ async def predict(text: str = Form(...)):
 
     try:
 
-        print("Loading model...")
-
-        prediction_pipeline = PredictionPipeline()
-
         print("Generating summary...")
 
         summary = prediction_pipeline.predict(text)
@@ -67,6 +70,8 @@ async def predict(text: str = Form(...)):
         )
 
     except Exception as e:
+
+        print(f"Error: {e}")
 
         return JSONResponse(
             status_code=500,
